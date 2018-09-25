@@ -65,7 +65,6 @@ public class game{
     }
 
     public static void fighting(){
-        
         //all weapons
         Map<String, Integer> weaponMap = new HashMap<String, Integer>();
         weaponMap.put("Taser", taserDamage);
@@ -81,7 +80,7 @@ public class game{
         System.out.println();
 
         PlayerClass player = new PlayerClass(weaponMap, maxHealth);
-        Scanner whichWeapon = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
 
         while (true){
         //chance of critical hit
@@ -92,19 +91,16 @@ public class game{
          int hitChancePlayer = ThreadLocalRandom.current().nextInt(0, 100);
          int hitChanceEnemy = ThreadLocalRandom.current().nextInt(0, 100);
 
-         System.out.println("Player health: " + player.playerHealth);
+         System.out.println("Player health: " + PlayerClass.playerHealth);
          System.out.println("Boss " + (bossCounter + 1) + " health: " + currentBoss.bossHealth);
 
         //win
          if (currentBoss.bossHealth <= 0){
-            Scanner takePotion = new Scanner(System.in);
             System.out.println("Congrats, would you like to take a potion? [yes/no]");
-            String potionChoice = takePotion.nextLine();
+            String potionChoice = input.nextLine();
 
             if (potionChoice.equals("yes")){
-
                 if (potionCount == 0){
-
                     System.out.println("Sorry, you don't have any left.");
                     maxHealth += 10;
                     bossCounter++;
@@ -114,24 +110,27 @@ public class game{
                     weaponMap.put("Pepper Spray", sprayDamage + 7);
                     weaponMap.put("Chainsaw", chainsawDamage + 7);
 
-                    System.out.println("Current health is at " + player.playerHealth);
+                    System.out.println("Current health is at " + PlayerClass.playerHealth);
+                    useTaser = 0;
+                    useMachete = 0;
+                    useSpray = 0;
+                    useChainsaw = 0;
 
-        
+                    break;
                 }
                 else{
                     maxHealth += 10;
-                    if (maxHealth - player.playerHealth < 70){
-                        player.playerHealth = maxHealth;
+                    if (maxHealth - PlayerClass.playerHealth < 70){
+                        PlayerClass.playerHealth = maxHealth;
 
-                        System.out.println("Current health is at " + player.playerHealth);
+                        System.out.println("Current health is at " + PlayerClass.playerHealth);
                     }
         
                     else{
-                        player.playerHealth += 70;
+                        PlayerClass.playerHealth += 70;
 
-                        System.out.println("Current health is at " + player.playerHealth);
+                        System.out.println("Current health is at " + PlayerClass.playerHealth);
                     }
-        
     
                     potionCount--;
     
@@ -143,6 +142,14 @@ public class game{
                     weaponMap.put("Machete", macheteDamage + 7);
                     weaponMap.put("Pepper Spray", sprayDamage + 7);
                     weaponMap.put("Chainsaw", chainsawDamage + 7);
+                    useTaser = 0;
+                    useMachete = 0;
+                    useSpray = 0;
+                    useChainsaw = 0;
+                    lowerBound += 7;
+                    upperBound += 7;
+
+                    break;
                 }
             }
             else{
@@ -154,23 +161,30 @@ public class game{
                 weaponMap.put("Machete", macheteDamage + 7);
                 weaponMap.put("Pepper Spray", sprayDamage + 7);
                 weaponMap.put("Chainsaw", chainsawDamage + 7);
+                useTaser = 0;
+                useMachete = 0;
+                useSpray = 0;
+                useChainsaw = 0;
 
+                break;
             }
-
-            takePotion.close();
          }
          //loss
          else if (PlayerClass.playerHealth <= 0){
              System.out.println("Sorry, you lost! Come back later.");
 
              leaveGame = true;
+             break;
          }
          //continue fighing
          else{
             System.out.println("Which weapon would you like to pick?");
-            String weaponChoice = whichWeapon.nextLine();
+            String weaponChoice = input.nextLine();
             
-            if (weaponMap.containsKey(weaponChoice)){
+            if (!weaponMap.containsKey(weaponChoice)){
+                System.out.println("No weapon " + weaponChoice + " exists.");
+            }
+            else{
                 if (weaponChoice.equals("Taser")){
                     if (useTaser == 3){
                         System.out.println("Already used 3 times.");
@@ -180,7 +194,6 @@ public class game{
                         currentDamage = weaponMap.get("Taser");
                         System.out.println("Used " + useTaser);
                     }
-        
                 }
                 else if (weaponChoice.equals("Machete")){
                     if (useMachete == 3){
@@ -191,7 +204,6 @@ public class game{
                         currentDamage = weaponMap.get("Machete");
                         System.out.println("Used " + Integer.toString(useMachete));
                     }
-        
                 }
                 else if (weaponChoice.equals("Pepper Spray")){
                     if (useSpray == 3){
@@ -213,48 +225,43 @@ public class game{
                         currentDamage = weaponMap.get("Chainsaw");
                         System.out.println("Used " + Integer.toString(useChainsaw));
                     }
-        
                 }
-            }
-
-            if (hitChancePlayer > 30){
-                if (critChancePlayer > 55){
-                    currentBoss.bossHealth -= 2*currentDamage;
-                    System.out.println("Critical hit! Enemy has taken " + (2*currentDamage));
-                    System.out.println();
-        
+                
+                if (hitChancePlayer > 30){
+                    if (critChancePlayer > 55){
+                        currentBoss.bossHealth -= 2*currentDamage;
+                        System.out.println("Critical hit! Enemy has taken " + (2*currentDamage));
+                        System.out.println();
+                    }
+                    else{
+                        currentBoss.bossHealth -= currentDamage;
+                        System.out.println("Enemy has taken " + Integer.toString(currentDamage));
+                        System.out.println();
+                    }
                 }
                 else{
-                    currentBoss.bossHealth -= currentDamage;
-                    System.out.println("Enemy has taken " + Integer.toString(currentDamage));
+                    System.out.println("You missed!");
                     System.out.println();
-        
+                }
+
+                if (hitChanceEnemy > 30){
+                    if (critChanceEnemy > 55){
+                        PlayerClass.playerHealth -= 2*currentEnemyDamage;
+                        System.out.println("Critical hit! You have taken " + Integer.toString(2*currentEnemyDamage));
+                        System.out.println();
+            
+                    }
+                    else{
+                        PlayerClass.playerHealth -= currentEnemyDamage;
+                        System.out.println("You have taken " + Integer.toString(currentEnemyDamage));
+                        System.out.println();
+                    }
+                 }
+                 else{
+                    System.out.println("Enemy missed!");
+                    System.out.println();
                 }
             }
-            else{
-                System.out.println("You missed!");
-                System.out.println();
-            }
-
-            whichWeapon.close();
-         }
-         if (hitChanceEnemy > 30){
-            if (critChanceEnemy > 55){
-                currentBoss.bossHealth -= 2*currentEnemyDamage;
-                System.out.println("Critical hit! You have taken " + Integer.toString(2*currentEnemyDamage));
-                System.out.println();
-    
-            }
-            else{
-                currentBoss.bossHealth -= currentEnemyDamage;
-                System.out.println("You have taken " + Integer.toString(currentEnemyDamage));
-                System.out.println();
-    
-            }
-         }
-         else{
-            System.out.println("Enemy missed!");
-            System.out.println();
          }
         }
     }
@@ -276,6 +283,7 @@ public class game{
             beginGame();
         }
 
+        System.out.println("We hope you had a nice time!");
         readChoice.close();
     }
 }
