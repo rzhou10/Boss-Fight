@@ -3,46 +3,46 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.text.*;
 
-public class game{
-    static int taserDamage = 5;
-    static int macheteDamage = 9;
-    static int sprayDamage = 7;
-    static int chainsawDamage = 12;
+public class Game{
+    int taserDamage = 5;
+    int macheteDamage = 9;
+    int sprayDamage = 7;
+    int chainsawDamage = 12;
 
     //list of weapons for each boss
-    static String[] weaponList = {"Whip", "Sword", "Crowbar", "Gun", "Acid", "Magic Staff", "Atomic Bomb"};
+    String[] weaponList = {"Whip", "Sword", "Crowbar", "Gun", "Acid", "Magic Staff", "Atomic Bomb"};
 
     //list of damage for each boss
-    static int[] damageList = {7, 10, 12, 16, 19, 24, 33};
+    int[] damageList = {7, 10, 12, 16, 19, 24, 33};
 
     //boundaries for health, will be randomly generated for each boss
-    static int lowerBound = 51;
-    static int upperBound = 59;
+    int lowerBound = 51;
+    int upperBound = 59;
 
     //will you have to leave after defeat
-    static boolean leaveGame = false;
+    boolean leaveGame = false;
 
     //keeps track of which boss you're at
-    static int bossCounter = 0;
+    int bossCounter = 0;
 
     //keeps track of how much to increment new health by
-    static int maxHealth = 50;
+    int maxHealth = 50;
 
     //# of potions
-    static int potionCount = 4;
+    int potionCount = 4;
 
     //usage for each weapon
-    static int useTaser = 0;
-    static int useMachete = 0;
-    static int useSpray = 0;
-    static int useChainsaw = 0;
+    int useTaser = 0;
+    int useMachete = 0;
+    int useSpray = 0;
+    int useChainsaw = 0;
 
-    static int weaponIndex = 0;
-    static int currentEnemyDamage = damageList[weaponIndex];
+    int weaponIndex = 0;
+    int currentEnemyDamage = damageList[weaponIndex];
 
-    static int currentDamage = 0;
+    int currentDamage = 0;
 
-    public static void beginGame(){
+    public void beginGame(){
         System.out.println("You have some crappy weapons in stock: A taser that does 5 damage, a machete that does 9 damage, ");
         System.out.println("pepper spray that does 7 damage, and a chainsaw that does 12 damage.");
         System.out.println("Don't worry, you have the potential to critically hit the enemy for 2x damage. Be on the lookout.");
@@ -64,7 +64,7 @@ public class game{
         }
     }
 
-    public static void fighting(){
+    public void fighting(){
         //all weapons
         Map<String, Integer> weaponMap = new HashMap<String, Integer>();
         weaponMap.put("Taser", taserDamage);
@@ -91,11 +91,18 @@ public class game{
          int hitChancePlayer = ThreadLocalRandom.current().nextInt(0, 100);
          int hitChanceEnemy = ThreadLocalRandom.current().nextInt(0, 100);
 
-         System.out.println("Player health: " + PlayerClass.playerHealth);
+         System.out.println("Player health: " + player.playerHealth);
          System.out.println("Boss " + (bossCounter + 1) + " health: " + currentBoss.bossHealth);
 
+         //loss
+        if (player.playerHealth <= 0){
+            System.out.println("Sorry, you lost! Come back later.");
+
+            leaveGame = true;
+            break;
+        }
         //win
-         if (currentBoss.bossHealth <= 0){
+         else if (currentBoss.bossHealth <= 0){
             System.out.println("Congrats, would you like to take a potion? [yes/no]");
             String potionChoice = input.nextLine();
 
@@ -110,26 +117,28 @@ public class game{
                     weaponMap.put("Pepper Spray", sprayDamage + 7);
                     weaponMap.put("Chainsaw", chainsawDamage + 7);
 
-                    System.out.println("Current health is at " + PlayerClass.playerHealth);
+                    System.out.println("Current health is at " + player.playerHealth);
                     useTaser = 0;
                     useMachete = 0;
                     useSpray = 0;
                     useChainsaw = 0;
+                    lowerBound += 7;
+                    upperBound += 7;
 
                     break;
                 }
                 else{
                     maxHealth += 10;
-                    if (maxHealth - PlayerClass.playerHealth < 70){
-                        PlayerClass.playerHealth = maxHealth;
+                    if (maxHealth - player.playerHealth < 70){
+                        player.playerHealth = maxHealth;
 
-                        System.out.println("Current health is at " + PlayerClass.playerHealth);
+                        System.out.println("Current health is at " + player.playerHealth);
                     }
         
                     else{
-                        PlayerClass.playerHealth += 70;
+                        player.playerHealth += 70;
 
-                        System.out.println("Current health is at " + PlayerClass.playerHealth);
+                        System.out.println("Current health is at " + player.playerHealth);
                     }
     
                     potionCount--;
@@ -165,16 +174,11 @@ public class game{
                 useMachete = 0;
                 useSpray = 0;
                 useChainsaw = 0;
+                lowerBound += 7;
+                upperBound += 7;
 
                 break;
             }
-         }
-         //loss
-         else if (PlayerClass.playerHealth <= 0){
-             System.out.println("Sorry, you lost! Come back later.");
-
-             leaveGame = true;
-             break;
          }
          //continue fighing
          else{
@@ -246,13 +250,13 @@ public class game{
 
                 if (hitChanceEnemy > 30){
                     if (critChanceEnemy > 55){
-                        PlayerClass.playerHealth -= 2*currentEnemyDamage;
+                        player.playerHealth -= 2*currentEnemyDamage;
                         System.out.println("Critical hit! You have taken " + Integer.toString(2*currentEnemyDamage));
                         System.out.println();
             
                     }
                     else{
-                        PlayerClass.playerHealth -= currentEnemyDamage;
+                        player.playerHealth -= currentEnemyDamage;
                         System.out.println("You have taken " + Integer.toString(currentEnemyDamage));
                         System.out.println();
                     }
@@ -264,26 +268,5 @@ public class game{
             }
          }
         }
-    }
-
-    public static void main(String[] args){
-        System.out.println("This is a game where you fight 7 bosses one after another, using nothing but the weapons that you have on you.");
-        System.out.println("Progress will not be saved, you must fight them all in one shot.");
-        System.out.println("Don't worry, your health and damage will increase after each fight.");
-
-        Scanner readChoice = new Scanner(System.in);
-        System.out.println("Are you up for the challenge? Enter no to leave, anything else to play");
-        String playerChoice = readChoice.next();
-
-        if (playerChoice.equals("no")){
-            System.out.println("Oh, well, come back when you feel you are ready.");
-            System.exit(0);
-        }
-        else{
-            beginGame();
-        }
-
-        System.out.println("We hope you had a nice time!");
-        readChoice.close();
     }
 }
