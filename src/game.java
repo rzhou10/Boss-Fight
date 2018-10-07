@@ -13,13 +13,13 @@ public class Game{
     String[] weaponList = {"Whip", "Sword", "Crowbar", "Gun", "Acid", "Magic Staff", "Atomic Bomb"};
 
     //list of damage for each boss
-    int[] damageList = {7, 10, 12, 16, 19, 24, 33};
+    int[] damageList = {7, 12, 14, 19, 23, 27, 38};
 
     //boundaries for health, will be randomly generated for each boss
     int lowerBound = 51;
     int upperBound = 59;
 
-    //will you have to leave after defeat
+    //leave game after defeat
     boolean leaveGame = false;
 
     //keeps track of which boss you're at
@@ -112,10 +112,10 @@ public class Game{
                     maxHealth += 10;
                     bossCounter++;
                     weaponIndex++;
-                    weaponMap.put("Taser", taserDamage + 7);
-                    weaponMap.put("Machete", macheteDamage + 7);
-                    weaponMap.put("Pepper Spray", sprayDamage + 7);
-                    weaponMap.put("Chainsaw", chainsawDamage + 7);
+                    taserDamage += 7;
+                    macheteDamage += 7;
+                    sprayDamage += 7;
+                    chainsawDamage += 7;
 
                     System.out.println("Current health is at " + player.playerHealth);
                     useTaser = 0;
@@ -147,10 +147,10 @@ public class Game{
                     bossCounter++;
         
                     weaponIndex++;
-                    weaponMap.put("Taser", taserDamage + 7);
-                    weaponMap.put("Machete", macheteDamage + 7);
-                    weaponMap.put("Pepper Spray", sprayDamage + 7);
-                    weaponMap.put("Chainsaw", chainsawDamage + 7);
+                    taserDamage += 7;
+                    macheteDamage += 7;
+                    sprayDamage += 7;
+                    chainsawDamage += 7;
                     useTaser = 0;
                     useMachete = 0;
                     useSpray = 0;
@@ -166,10 +166,10 @@ public class Game{
                 bossCounter++;
                 weaponIndex++;
 
-                weaponMap.put("Taser", taserDamage + 7);
-                weaponMap.put("Machete", macheteDamage + 7);
-                weaponMap.put("Pepper Spray", sprayDamage + 7);
-                weaponMap.put("Chainsaw", chainsawDamage + 7);
+                taserDamage += 7;
+                macheteDamage += 7;
+                sprayDamage += 7;
+                chainsawDamage += 7;
                 useTaser = 0;
                 useMachete = 0;
                 useSpray = 0;
