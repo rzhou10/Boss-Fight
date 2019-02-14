@@ -1,7 +1,3 @@
-import java.util.*;
-import java.io.*;
-import java.text.*;
-
 public class Boss{
     public String weapon;
     public int bossHealth;

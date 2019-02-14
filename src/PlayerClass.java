@@ -1,6 +1,4 @@
 import java.util.*;
-import java.io.*;
-import java.text.*;
 
 public class PlayerClass{
     public Map<String, Integer> equipment;

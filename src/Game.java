@@ -1,7 +1,5 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.io.*;
-import java.text.*;
 
 public class Game{
     private int taserDamage = 5;
@@ -81,7 +79,7 @@ public class Game{
         PlayerClass player = new PlayerClass(weaponMap, maxHealth);
         Scanner input = new Scanner(System.in);
 
-        while (true){
+        limit: while (true){
             //chance of critical hit
             int critChancePlayer = ThreadLocalRandom.current().nextInt(0, 100);
             int critChanceEnemy = ThreadLocalRandom.current().nextInt(0, 100);
@@ -98,6 +96,7 @@ public class Game{
                 System.out.println("Sorry, you lost! Come back later.");
 
                 leaveGame = true;
+                input.close();
                 break;
             }
             //win
@@ -113,12 +112,14 @@ public class Game{
                         break;
                     }
                     else{
+
+                        //take potion if player health is really low, otherwise no
                         maxHealth += 10;
                         if (maxHealth - player.playerHealth < 70){
-                            maxHealth = player.playerHealth;
+                            player.playerHealth = maxHealth;
                         }
                         else{
-                            maxHealth += 70;
+                            player.playerHealth += 70;
                         }
 
                         potionCount--;
@@ -147,6 +148,7 @@ public class Game{
                     if (weaponChoice.equals("Taser")){
                         if (useTaser == 3){
                             System.out.println("Already used 3 times.");
+                            continue limit;
                         }
                         else{
                             useTaser++;
@@ -157,6 +159,7 @@ public class Game{
                     else if (weaponChoice.equals("Machete")){
                         if (useMachete == 3){
                             System.out.println("Already used 3 times.");
+                            continue limit;
                         }
                         else{
                             useMachete++;
@@ -167,6 +170,7 @@ public class Game{
                     else if (weaponChoice.equals("Pepper Spray")){
                         if (useSpray == 3){
                             System.out.println("Already used 3 times.");
+                            continue limit;
                         }
                         else{
                             useSpray++;
@@ -178,6 +182,7 @@ public class Game{
                     else if (weaponChoice.equals("Chainsaw")){
                         if (useChainsaw == 3){
                             System.out.println("Already used 3 times.");
+                            continue limit;
                         }
                         else{
                             useChainsaw++;
@@ -223,6 +228,7 @@ public class Game{
                 }
             }
         }
+
     }
 
     public void updateStats(){
