@@ -5,4 +5,4 @@ In this game, you will have several weapons to fight 7 bosses nonstop. You can r
 
 ## Running
 
-Clone this repository and compile the source files in `src` (requires Java 8).
+Clone this repository and compile the source files in `src` (requires Java 8). Once that's done just run `java Main` to start the game.
