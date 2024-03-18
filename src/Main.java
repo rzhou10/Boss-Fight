@@ -16,7 +16,7 @@ class Main {
             System.exit(0);
         } else {
             Game g = new Game();
-            g.beginGame();
+            g.BeginGame();
         }
 
         System.out.println("That must have been exhausting!");
